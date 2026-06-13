@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy"
+  content="default-src * 'self' data: blob:;
+           script-src * 'self' 'unsafe-inline' 'unsafe-eval' data: blob:;
+           style-src * 'self' 'unsafe-inline' data: blob:;
+           connect-src * data: blob: https://bwalya.onrender.com https://*.cloudinary.com;
+           img-src * data: blob:;
+           media-src *;
+           font-src * data:;">
+<script src="cordova.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bwalya Lengwe Africa</title>
+<meta name="description" content="Books, articles, and more">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="public.css">
+<script>
+  (function() {
+    const saved = localStorage.getItem('ch-theme');
+    if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  })();
+</script>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+
+    <!-- Hamburger -->
+    <button class="hamburger-menu-btn" onclick="openAboutSidebar()" aria-label="Menu">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+
+    <nav class="header-nav">
+      <a href="#" class="nav-link" data-filter="all" onclick="filterByType('all'); return false;">All</a>
+      <a href="#" class="nav-link" data-filter="article" onclick="filterByType('article'); return false;">Articles</a>
+      <a href="#" class="nav-link" data-filter="book" onclick="filterByType('book'); return false;">Books</a>
+      <a href="#" class="nav-link" data-filter="video" onclick="filterByType('video'); return false;">Videos</a>
+      <a href="#" class="nav-link" data-filter="audio" onclick="filterByType('audio'); return false;">Audio</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="search-btn" onclick="toggleSearch()" aria-label="Search">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <span class="theme-icon-sun">☀</span>
+        <span class="theme-icon-moon">☽</span>
+      </button>
+    </div>
+
+  </div>
+  <div class="search-bar" id="search-bar" style="display:none">
+    <div class="search-inner">
+      <input type="text" id="search-input" placeholder="Search books, articles, topics..." autocomplete="off">
+      <button class="search-close" onclick="toggleSearch()">✕</button>
+    </div>
+  </div>
+</header>
+
+<!-- Main -->
+<main id="main-content">
+
+  <!-- HOME PAGE -->
+  <div id="page-home">
+    <section class="hero-section" id="featured-hero">
+      <div class="hero-placeholder">
+        <div class="hero-loader"></div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <div class="section-header">
+        <h2 class="section-title" id="grid-title">Latest</h2>
+        <div class="type-filter-pills" id="type-pills">
+          <button class="filter-pill active" data-type="all">All</button>
+          <button class="filter-pill" data-type="article">Articles</button>
+          <button class="filter-pill" data-type="book">Books</button>
+          <button class="filter-pill" data-type="video">Videos</button>
+          <button class="filter-pill" data-type="audio">Audio</button>
+          <button class="filter-pill" data-type="link">Links</button>
+          <button class="filter-pill" data-type="announcement">News</button>
+          <button class="filter-pill" data-type="event">Events</button>
+        </div>
+      </div>
+      <div class="tag-filter-bar" id="tag-filter-bar" style="display:none"></div>
+      <div class="content-grid" id="content-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+      <div class="load-more-wrap">
+        <button class="btn-load-more" id="load-more-btn" style="display:none" onclick="loadMore()">Load More</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- CONTENT DETAIL PAGE -->
+  <div id="page-detail" style="display:none">
+    <div class="detail-container">
+      <button class="back-btn" onclick="showHome()">← Back</button>
+      <div id="detail-content"></div>
+    </div>
+  </div>
+
+  <!-- ABOUT PAGE (full screen, same pattern as article/video) -->
+  <div id="page-about" style="display:none">
+    <div class="detail-container">
+      <button class="back-btn" onclick="closeAboutPage()">← Back</button>
+      <div class="about-page-content">
+
+        <div class="about-page-photo-wrap">
+          <img src="owner.png"
+               onerror="this.style.display='none';document.getElementById('about-initials-page').style.display='flex';"
+               class="about-page-photo" alt="Bwalya Lengwe">
+          <div class="about-initials-page" id="about-initials-page" style="display:none">BL</div>
+        </div>
+
+        <h1 class="about-page-name">Bwalya Lengwe</h1>
+        <p class="about-page-tagline">Content Creator &amp; Curator</p>
+
+        <div class="about-page-bio">
+          <p>Bwalya Lengwe is an emerging Zambian Development expert, a thinker with five years’experience in youth development programs , Human & Reproductive health rights and Research Studies. He seeks to unleash potential in youths and developing communities. He holds a Diploma in modern Project Management from Alison Institute,Certificate in Research Methods from Freya International School of Research and Implementation and His Pursing a Bachelor’s of Arts Degree in Development Studies. at the Information and Communications University.</p>
+          <br>
+          <p>He has completed leadership training programs at Copper Rose Zambia as a Campus Corp Fellow and Kectil Global Youth Leadership program, and he is serving as an Executive Director at SITADC Youth Organization also is a senior executive at Proactive Community Action.He has worked with YMCA,YWCA, MOH, Save the Children Internation and Zambia Statistics Agency.</p>
+          <br>
+          <p>Bwalya continues to engage with civil society organizations, institutions, and youth movements across Africa advocating for youth leadership,Human Development, and afuture built on character and shared responsibility to eradicate poverty and inequality.Through his creative works, Bwalya seeks to inspire young people to think critically, act courageously, and reclaim the promise of their nation.</p>
+
+        </div>
+
+        <div class="about-page-contacts">
+          <a class="about-page-contact" href="mailto:blengwe018@gmail.com">
+            <span class="about-contact-icon">✉</span>
+            <div>
+              <div class="about-contact-label">Email</div>
+              <div class="about-contact-value">blengwe018@gmail.com</div>
+            </div>
+          </a>
+          <a class="about-page-contact" href="tel:+260770681841">
+            <span class="about-contact-icon">📞</span>
+            <div>
+              <div class="about-contact-label">Phone</div>
+              <div class="about-contact-value">+260 770 681 841</div>
+            </div>
+          </a>
+          <a class="about-page-contact about-page-contact-whatsapp" href="https://wa.me/260968091475" target="_blank" rel="noopener">
+            <span class="about-contact-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.555 4.122 1.527 5.857L.057 23.882l6.196-1.623A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.371l-.36-.213-3.68.964.982-3.594-.235-.369A9.818 9.818 0 1112 21.818z"/></svg>
+            </span>
+            <div>
+              <div class="about-contact-label">WhatsApp</div>
+              <div class="about-contact-value">+260 968 091 475</div>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="brand-name" style="font-size:14px">BwalyaLengweAfrica</span>
+    <span class="footer-sep">·</span>
+    <span>Where knowledge is shared freely</span>
+  </div>
+</footer>
+
+<!-- Slide-in sidebar (only About button) -->
+<div class="about-overlay" id="about-overlay" onclick="closeAboutSidebar()"></div>
+<aside class="about-sidebar" id="about-sidebar">
+  <div class="about-sidebar-header">
+    <span class="about-sidebar-title">Menu</span>
+    <button class="about-close-btn" onclick="closeAboutSidebar()" aria-label="Close">✕</button>
+  </div>
+  <div class="about-sidebar-body">
+
+    <!-- Filter section -->
+    <div class="sidebar-section-label">Browse</div>
+    <div class="sidebar-filter-pills">
+      <button class="sidebar-filter-pill active" data-type="all"    onclick="filterByType('all');    closeSidebarPills(this);">All</button>
+      <button class="sidebar-filter-pill" data-type="article"       onclick="filterByType('article'); closeSidebarPills(this);">Articles</button>
+      <button class="sidebar-filter-pill" data-type="book"          onclick="filterByType('book');    closeSidebarPills(this);">Books</button>
+      <button class="sidebar-filter-pill" data-type="video"         onclick="filterByType('video');   closeSidebarPills(this);">Videos</button>
+      <button class="sidebar-filter-pill" data-type="audio"         onclick="filterByType('audio');   closeSidebarPills(this);">Audio</button>
+      <button class="sidebar-filter-pill" data-type="event"         onclick="filterByType('event');   closeSidebarPills(this);">Events</button>
+      <button class="sidebar-filter-pill" data-type="link"          onclick="filterByType('link');    closeSidebarPills(this);">Links</button>
+      <button class="sidebar-filter-pill" data-type="announcement"  onclick="filterByType('announcement'); closeSidebarPills(this);">News</button>
+    </div>
+
+  </div>
+
+  <!-- About button pinned to bottom -->
+  <div class="about-sidebar-footer">
+    <button class="about-sidebar-about-btn" onclick="showAboutPage(); closeAboutSidebar();">
+      <span class="about-sidebar-btn-icon">👤</span>
+      About
+    </button>
+  </div>
+</aside>
+
+<!-- Download progress overlay -->
+<div class="dl-overlay" id="dl-overlay">
+  <div class="dl-title" id="dl-title">Downloading…</div>
+  <div class="dl-bar-bg"><div class="dl-bar" id="dl-bar"></div></div>
+  <div class="dl-label" id="dl-label">Starting…</div>
+</div>
+
+<!-- Toast notifications -->
+<div class="toast-container" id="toasts"></div>
+
+<script src="public.js"></script>
+</body>
+</html>
