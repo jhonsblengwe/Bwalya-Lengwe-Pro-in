@@ -12,7 +12,7 @@
            font-src * data:;">
 <script src="cordova.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bwalya Lengwe Africa</title>
+<title>BwalyaLengweAfrica</title>
 <meta name="description" content="Books, articles, and more">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -30,7 +30,7 @@
 <header class="header">
   <div class="header-inner">
 
-    <!-- Hamburger -->
+    <!-- Hamburger replaces the ◈ brand icon -->
     <button class="hamburger-menu-btn" onclick="openAboutSidebar()" aria-label="Menu">
       <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
         <line x1="3" y1="6" x2="21" y2="6"/>
@@ -119,26 +119,34 @@
   <div id="page-about" style="display:none">
     <div class="detail-container">
       <button class="back-btn" onclick="closeAboutPage()">← Back</button>
-      <div class="about-page-content">
+
+      <!-- Skeleton loader — shown while settings are fetched the first time -->
+      <div class="about-skeleton" id="about-skeleton">
+        <div class="about-skel-photo"></div>
+        <div class="about-skel-line about-skel-name"></div>
+        <div class="about-skel-line about-skel-tagline"></div>
+        <div class="about-skel-line about-skel-bio1"></div>
+        <div class="about-skel-line about-skel-bio2"></div>
+        <div class="about-skel-contacts">
+          <div class="about-skel-contact"></div>
+          <div class="about-skel-contact"></div>
+          <div class="about-skel-contact"></div>
+        </div>
+      </div>
+
+      <div class="about-page-content" id="about-page-content" style="display:none">
 
         <div class="about-page-photo-wrap">
-          <img src="owner.png"
+          <img src="owner.jpg"
                onerror="this.style.display='none';document.getElementById('about-initials-page').style.display='flex';"
                class="about-page-photo" alt="Bwalya Lengwe">
           <div class="about-initials-page" id="about-initials-page" style="display:none">BL</div>
         </div>
 
         <h1 class="about-page-name">Bwalya Lengwe</h1>
-        <p class="about-page-tagline">Development Thinker &amp; Community Builder</p>
+        <p class="about-page-tagline">Curator</p>
 
-        <div class="about-page-bio">
-          <p>Bwalya Lengwe is an emerging Zambian Development expert, a thinker with five years’experience in youth development programs , Human & Reproductive health rights and Research Studies. He seeks to unleash potential in youths and developing communities. He holds a Diploma in modern Project Management from Alison Institute,Certificate in Research Methods from Freya International School of Research and Implementation and His Pursing a Bachelor’s of Arts Degree in Development Studies. at the Information and Communications University.</p>
-          <br>
-          <p>He has completed leadership training programs at Copper Rose Zambia as a Campus Corp Fellow and Kectil Global Youth Leadership program, and he is serving as an Executive Director at SITADC Youth Organization also is a senior executive at Proactive Community Action.He has worked with YMCA,YWCA, MOH, Save the Children Internation and Zambia Statistics Agency.</p>
-          <br>
-          <p>Bwalya continues to engage with civil society organizations, institutions, and youth movements across Africa advocating for youth leadership,Human Development, and afuture built on character and shared responsibility to eradicate poverty and inequality.Through his creative works, Bwalya seeks to inspire young people to think critically, act courageously, and reclaim the promise of their nation.</p>
-
-        </div>
+        <div class="about-page-bio" id="about-page-bio"></div>
 
         <div class="about-page-contacts">
           <a class="about-page-contact" href="mailto:blengwe018@gmail.com">

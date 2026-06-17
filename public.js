@@ -957,13 +957,113 @@ function closeAboutPage() {
   showHome();
 }
 
-function showAboutPage() {
+let _aboutSettingsCache = null;
+
+async function showAboutPage() {
   window.location.hash = 'about';
   document.getElementById('page-home').style.display = 'none';
   document.getElementById('page-detail').style.display = 'none';
   document.getElementById('page-about').style.display = 'block';
   document.title = 'About — ContentHub';
   window.scrollTo(0, 0);
+
+  const skeleton = document.getElementById('about-skeleton');
+  const content  = document.getElementById('about-page-content');
+
+  if (_aboutSettingsCache) {
+    // Already loaded this session — show real content instantly, no skeleton flash
+    skeleton.style.display = 'none';
+    content.style.display = 'flex';
+    applyAboutSettings(_aboutSettingsCache);
+    return;
+  }
+
+  // First time this session — show skeleton while fetching
+  skeleton.style.display = 'flex';
+  content.style.display = 'none';
+
+  try {
+    const res = await fetch(`${API}/settings`);
+    _aboutSettingsCache = await res.json();
+    applyAboutSettings(_aboutSettingsCache);
+  } catch { /* fall back to whatever is already in the HTML */ }
+  finally {
+    skeleton.style.display = 'none';
+    content.style.display = 'flex';
+  }
+}
+
+function applyAboutSettings(s) {
+  if (!s) return;
+  const style = s.style || {};
+  const layout = s.layout || {};
+
+  // Photo
+  const photoWrap = document.querySelector('.about-page-photo-wrap');
+  const photoImg = document.querySelector('.about-page-photo');
+  const initialsEl = document.getElementById('about-initials-page');
+  if (s.photo_url) {
+    photoImg.src = s.photo_url;
+    photoImg.style.display = 'block';
+    if (initialsEl) initialsEl.style.display = 'none';
+  } else if (initialsEl) {
+    initialsEl.textContent = (s.name || 'BL').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  }
+
+  // Photo layout
+  if (photoWrap) {
+    const size = (layout.photo_size || 100) + 'px';
+    photoWrap.style.width = size;
+    photoWrap.style.height = size;
+    photoWrap.style.borderWidth = (layout.photo_border_width ?? 3) + 'px';
+    photoWrap.style.borderColor = layout.photo_border_color || '#e0dbd0';
+  }
+  const contentEl = document.querySelector('.about-page-content');
+  if (contentEl) {
+    const pos = layout.photo_position || 'center';
+    contentEl.style.alignItems = pos === 'left' ? 'flex-start' : pos === 'right' ? 'flex-end' : 'center';
+    contentEl.style.textAlign = pos === 'left' ? 'left' : pos === 'right' ? 'right' : 'center';
+  }
+
+  // Text content
+  const nameEl = document.querySelector('.about-page-name');
+  const taglineEl = document.querySelector('.about-page-tagline');
+  const bioEl = document.getElementById('about-page-bio');
+  if (nameEl) {
+    nameEl.textContent = s.name || 'Bwalya Lengwe';
+    nameEl.style.fontSize = (style.name_font_size || 32) + 'px';
+    nameEl.style.color = style.name_color || '#1a1814';
+  }
+  if (taglineEl) {
+    taglineEl.textContent = s.tagline || '';
+    taglineEl.style.fontSize = (style.tagline_font_size || 16) + 'px';
+    taglineEl.style.color = style.tagline_color || '#7a7060';
+  }
+  if (bioEl) {
+    bioEl.innerHTML = s.bio || '';
+    bioEl.style.fontSize = (style.bio_font_size || 17) + 'px';
+    bioEl.style.color = style.bio_color || '#3d3830';
+  }
+
+  // Contacts
+  const emailLink = document.querySelector('.about-page-contact[href^="mailto:"]');
+  if (emailLink && s.email) {
+    emailLink.href = 'mailto:' + s.email;
+    const val = emailLink.querySelector('.about-contact-value');
+    if (val) val.textContent = s.email;
+  }
+  const phoneLink = document.querySelector('.about-page-contact[href^="tel:"]');
+  if (phoneLink && s.phone) {
+    phoneLink.href = 'tel:' + s.phone;
+    const val = phoneLink.querySelector('.about-contact-value');
+    if (val) val.textContent = s.phone;
+  }
+  const waLink = document.querySelector('.about-page-contact-whatsapp');
+  if (waLink && s.whatsapp) {
+    waLink.href = 'https://wa.me/' + s.whatsapp;
+    const val = waLink.querySelector('.about-contact-value');
+    if (val) val.textContent = '+' + s.whatsapp;
+  }
 }
 
 
