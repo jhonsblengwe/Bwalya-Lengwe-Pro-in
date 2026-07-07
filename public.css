@@ -401,7 +401,6 @@ main { flex: 1; }
 .card-type-overlay.video        { background: #dc2626; color: white; }
 .card-type-overlay.audio        { background: #059669; color: white; }
 .card-type-overlay.link         { background: #d97706; color: white; }
-.card-type-overlay.announcement { background: #0891b2; color: white; }
 .card-type-overlay.event       { background: #7c3aed; color: white; }
 
 .card-body {
@@ -539,7 +538,6 @@ main { flex: 1; }
 .detail-type-badge.video        { background: #fee2e2; color: #dc2626; }
 .detail-type-badge.audio        { background: #d1fae5; color: #059669; }
 .detail-type-badge.link         { background: #fef3c7; color: #d97706; }
-.detail-type-badge.announcement { background: #cffafe; color: #0891b2; }
 .detail-type-badge.event        { background: #ede9fe; color: #7c3aed; }
 
 html[data-theme="dark"] .detail-type-badge.article      { background: #1e3460; color: #93c5fd; }
@@ -1217,7 +1215,9 @@ html[data-theme="dark"] .card-event-date { color: #a78bfa; }
 
 /* ---- EVENT TYPE BADGE ---- */
 .card-type-overlay.event   { background: #16a34a; color: white; }
+.card-type-overlay.work    { background: #7c3aed; color: white; }
 .detail-type-badge.event   { background: #dcfce7; color: #16a34a; }
+.detail-type-badge.work    { background: #ede9fe; color: #7c3aed; }
 
 /* ---- EVENT DATE ON CARD ---- */
 .card-event-date {

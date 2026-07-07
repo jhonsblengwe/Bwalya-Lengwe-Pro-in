@@ -603,7 +603,7 @@ function filterByType(type) {
     p.classList.toggle('active', p.dataset.type === type);
   });
 
-  const titles = { all: 'Latest', article: 'Articles', book: 'Books', video: 'Videos', audio: 'Audio', link: 'Links', announcement: 'Announcements', event: 'Events' };
+  const titles = { all: 'Latest', article: 'Articles', book: 'Books', video: 'Videos', link: 'Links', event: 'Events', work: 'My Works' };
   document.getElementById('grid-title').textContent = titles[type] || 'Latest';
   renderTagBar(); // clear it
   loadGrid();
@@ -1094,7 +1094,7 @@ function toggleSearch() {
 
 // ---- HELPERS ----
 function getTypeIcon(type) {
-  const icons = { book: '📚', article: '📰', video: '🎬', audio: '🎵', link: '🔗', announcement: '📢', event: '📅' };
+  const icons = { book: '📚', article: '📰', video: '🎬', link: '🔗', event: '📅', work: '🖊' };
   return icons[type] || '📄';
 }
 
