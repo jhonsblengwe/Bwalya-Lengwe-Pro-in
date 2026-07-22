@@ -706,6 +706,31 @@ async function openDetail(slug) {
 }
 
 
+
+// ---- BOOK REVIEWS RENDERER ----
+function buildReviewsSection(reviews) {
+  if (!reviews || !reviews.length) return '';
+  const cards = reviews.map(r => `
+    <div class="review-card">
+      <div class="review-card-header">
+        ${r.photo
+          ? `<img src="${cdnImg(r.photo,'thumb')}" class="review-avatar" alt="${escHtml(r.name)}">`
+          : `<div class="review-avatar review-avatar-initials">${escHtml((r.name || '?')[0].toUpperCase())}</div>`
+        }
+        <div class="review-card-meta">
+          <div class="review-card-name">${escHtml(r.name)}</div>
+          ${r.role ? `<div class="review-card-role">${escHtml(r.role)}</div>` : ''}
+        </div>
+      </div>
+      ${r.review ? `<p class="review-card-text">${escHtml(r.review)}</p>` : ''}
+    </div>
+  `).join('');
+  return `
+    <div class="book-reviews-section">
+      <h3 class="book-reviews-title">Reader Reviews</h3>
+      <div class="book-reviews-grid">${cards}</div>
+    </div>`;
+}
 // ---- EVENT CARD BUILDER ----
 function buildEventCard(ev, item) {
   if (!ev || !Object.keys(ev).length) return '';
@@ -927,6 +952,7 @@ function renderDetail(item) {
       ${rc.description ? `<div class="detail-description">${escHtml(rc.description)}</div>` : ''}
       ${mediaHtml}
       ${rc.body ? `<div class="detail-body">${rc.body}</div>` : ''}
+      ${rc.book_reviews && rc.book_reviews.length ? buildReviewsSection(rc.book_reviews) : ''}
     </div>
   `;
 
